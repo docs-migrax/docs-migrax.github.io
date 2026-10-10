@@ -1,0 +1,51 @@
+# Migrax
+
+> Migrax generates SQL migrations from JPA/Hibernate entities and applies them, with locking, checksums, rollback scripts, linting and verification. It runs as a command line tool, a Maven or Gradle plugin, a container image, and at startup in Spring Boot, Quarkus, Micronaut and Helidon, on PostgreSQL, CockroachDB, MySQL, MariaDB, SQL Server, Oracle, H2 and SQLite.
+
+Full text of every page: https://docs-migrax.github.io/llms-full.txt
+
+## Overview
+- [Home](https://docs-migrax.github.io/): What Migrax is, a short example, and how to get started.
+- [Download](https://docs-migrax.github.io/download/): Migrax needs Java 17 or newer. Download the command line tool below, then run its installer as described in Installation.
+
+## Getting started
+- [Installation](https://docs-migrax.github.io/getting-started/installation/): Migrax is a command line tool. It needs Java 17 or newer; nothing else has to be installed, and no administrator rights are needed.
+- [Quick start](https://docs-migrax.github.io/getting-started/quickstart/): This takes about five minutes. You need a service with JPA entities, a `pom.xml` or `build.gradle`, and a database it can reach.
+
+## Guides
+- [How Migrax works](https://docs-migrax.github.io/guides/how-it-works/): Schema model. Migrax builds a model of the tables your entities need.
+- [Changing entities](https://docs-migrax.github.io/guides/changing-entities/): The everyday loop is short:
+- [Rollbacks and recovery](https://docs-migrax.github.io/guides/rollbacks-and-recovery/): Every generated migration has a rollback script in `rollback/<same name>.sql`.
+- [Working in a team](https://docs-migrax.github.io/guides/team-workflow/): The snapshot is written with one table, column, index and key per line, so git can merge changes two people made to different tables.
+- [Continuous integration](https://docs-migrax.github.io/guides/ci/): Three commands make a good CI gate:
+- [Production safety](https://docs-migrax.github.io/guides/production-safety/): Migrax is built around one idea: a migration should be proven before it runs in production.
+- [Advanced migrations](https://docs-migrax.github.io/guides/advanced-migrations/): Some data changes are easier in Java than in SQL.
+- [Switching from Flyway or Liquibase](https://docs-migrax.github.io/guides/switching-tools/): A project that already manages its database with Flyway or Liquibase can move to Migrax with one command, without running anything again on the database.
+- [Containers and Kubernetes](https://docs-migrax.github.io/guides/containers-and-kubernetes/): In container platforms, migrations usually run as their own step before the new version of the application starts: a Kubernetes Job, an init container, or a deploy hook.
+- [Using Migrax with AI assistants](https://docs-migrax.github.io/guides/ai-assistants/): AI coding assistants can use Migrax directly: they read what changed, preview the SQL with its risks, and explain it to you, while you stay the one who changes the database.
+
+## Frameworks
+- [Frameworks and build tools](https://docs-migrax.github.io/frameworks/): Migrax doesn't depend on any framework. It reads your entities and talks to the database over JDBC, so the command line works the same everywhere.
+- [Spring Boot](https://docs-migrax.github.io/frameworks/spring-boot/): Nothing to configure. Migrax reads the database settings from `application.properties` or `application.yml`, including the active profile:
+- [Quarkus](https://docs-migrax.github.io/frameworks/quarkus/): Migrax reads `application.properties` / `application.yaml` with the active profile:
+- [Micronaut](https://docs-migrax.github.io/frameworks/micronaut/): Micronaut 4 and 5 are supported.
+- [Helidon](https://docs-migrax.github.io/frameworks/helidon/): Migrax reads `META-INF/microprofile-config.properties` (and the `mp.config.profile`) together with `META-INF/persistence.xml`:
+- [Jakarta EE and plain Hibernate](https://docs-migrax.github.io/frameworks/jakarta-ee/): Any project with JPA entities works, with or without an application framework.
+- [Maven plugin](https://docs-migrax.github.io/frameworks/maven/): Everything the command line does is also available as Maven goals, which is handy in CI or when you prefer not to install the CLI.
+- [Gradle plugin](https://docs-migrax.github.io/frameworks/gradle/): migrax { packageName.set("com.example.shop") // optional; defaults to the project group } ```
+
+## Reference
+- [CLI commands](https://docs-migrax.github.io/reference/cli/): Run `migrax help <command>` for the same information in the terminal.
+- [Configuration](https://docs-migrax.github.io/reference/configuration/): Most projects need no configuration: Migrax reads the settings your application already has.
+- [Naming strategies](https://docs-migrax.github.io/reference/naming/): Hibernate turns entity and field names into table and column names, and each framework configures that differently.
+- [Databases](https://docs-migrax.github.io/reference/databases/): The dialect comes from the JDBC URL. When there is no database URL (for example in a CI step that only plans), pass `--dialect`.
+- [Hibernate versions](https://docs-migrax.github.io/reference/hibernate/): With Hibernate 5.4 or newer in your project, Migrax asks your Hibernate version itself for the mapping, without connecting to a database.
+- [Lint rules](https://docs-migrax.github.io/reference/lint-rules/): Migrax lints every migration it generates, and `migrax lint` checks pending migrations (or `--all`, or named files).
+- [Errors and JSON output](https://docs-migrax.github.io/reference/errors-and-json/): Every command can report its result as JSON with `--json`, and every error has a stable code.
+- [Troubleshooting](https://docs-migrax.github.io/reference/troubleshooting/): Start with `migrax doctor`: it checks Java, the build, the entities, the database connection and risky settings, and says how to fix each problem.
+- [Limitations](https://docs-migrax.github.io/reference/limitations/): Known limits in Migrax 0.2.0:
+
+## Project
+- [Versioning and releases](https://docs-migrax.github.io/project/versioning/): Migrax versions follow Semantic Versioning: `MAJOR.MINOR.PATCH`.
+- [Contributing to Migrax](https://docs-migrax.github.io/project/contributing/): Thank you for helping. This guide covers building, testing and the rules for branches, commits and releases.
+- [Changelog](https://docs-migrax.github.io/project/changelog/): All notable changes to Migrax are listed here.
