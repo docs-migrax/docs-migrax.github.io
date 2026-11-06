@@ -1,0 +1,1377 @@
+/* =========================================================================
+   Migrax docs design. Brand: black, white and yellow. Yellow is never text on white: in
+   light mode it is a fill (buttons, underlines, highlights) under black text. Red only means
+   danger (admonitions). Animations respect prefers-reduced-motion (see the end of this file).
+   ========================================================================= */
+
+:root {
+  --mx-yellow: #fbbf24;
+  --mx-yellow-deep: #f59e0b;
+  --mx-yellow-soft: #fde68a;
+  --mx-ink: #0a0a0a;
+  --mx-ink-2: #141414;
+  --mx-line: rgba(255, 255, 255, 0.08);
+  --mx-radius: 14px;
+  --mx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --mx-card-bg: #ffffff;
+  --mx-card-border: rgba(15, 23, 42, 0.08);
+  --mx-card-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --mx-muted: rgba(15, 23, 42, 0.62);
+  /* accent for text and icons: black on white, yellow on black */
+  --mx-accent-text: #0a0a0a;
+}
+/* Material's own colors. Two attributes, so these win over the theme's palette rules. */
+[data-md-color-scheme="default"][data-md-color-primary] {
+  --md-primary-fg-color: #0a0a0a;
+  --md-primary-fg-color--light: #2a2a2a;
+  --md-primary-fg-color--dark: #000000;
+  --md-primary-bg-color: #ffffff;
+  --md-accent-fg-color: #0a0a0a;
+  --md-accent-fg-color--transparent: rgba(251, 191, 36, 0.25);
+  --md-accent-bg-color: #ffffff;
+  --md-typeset-a-color: #0a0a0a;
+}
+[data-md-color-scheme="slate"][data-md-color-primary] {
+  --md-primary-fg-color: #0a0a0a;
+  --md-primary-fg-color--light: #2a2a2a;
+  --md-primary-fg-color--dark: #000000;
+  --md-primary-bg-color: #ffffff;
+  --md-accent-fg-color: #fbbf24;
+  --md-accent-fg-color--transparent: rgba(251, 191, 36, 0.14);
+  --md-accent-bg-color: #0a0a0a;
+  --md-typeset-a-color: #fbbf24;
+}
+[data-md-color-scheme="slate"] {
+  --mx-accent-text: #fbbf24;
+  --mx-card-bg: #141414;
+  --mx-card-border: rgba(255, 255, 255, 0.07);
+  --mx-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+  --mx-muted: rgba(255, 255, 255, 0.6);
+  --md-default-bg-color: #0a0a0a;
+  --md-code-bg-color: #161616;
+}
+
+/* ---------------------------------------------------------------- header */
+/* The blur sits on a layer behind the header: backdrop-filter on the header itself would
+   make it the containing block of the fixed search panel and clip the search results. */
+.md-header,
+.md-tabs {
+  background: transparent;
+  color: #fff;
+}
+.md-header::before,
+.md-tabs::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(10, 10, 10, 0.94);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+}
+.md-tabs {
+  position: relative;
+  z-index: 0;
+}
+.md-header {
+  box-shadow: none;
+  border-bottom: 1px solid var(--mx-line);
+}
+.md-header::after {
+  /* thin brand line under the header */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--mx-yellow) 30%, var(--mx-yellow) 70%,
+    transparent);
+  opacity: 0.7;
+}
+.md-tabs {
+  border-bottom: 1px solid var(--mx-line);
+}
+.md-tabs__link {
+  opacity: 0.7;
+  transition: opacity 0.2s, color 0.2s;
+}
+.md-tabs__link:hover,
+.md-tabs__item--active .md-tabs__link {
+  opacity: 1;
+  color: #fff;
+}
+.md-tabs__item--active .md-tabs__link {
+  background-image: linear-gradient(var(--mx-yellow), var(--mx-yellow));
+  background-size: 100% 2px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  padding-bottom: 0.15rem;
+}
+.md-header__button.md-logo img {
+  height: 1.5rem;
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.25));
+}
+.md-search__form {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ---------------------------------------------------------------- hero */
+.mx-hero {
+  position: relative;
+  overflow: hidden;
+  max-width: 100vw;
+  isolation: isolate;
+  color: #fff;
+  background: radial-gradient(120% 80% at 50% -10%, #1c1606 0%, var(--mx-ink) 55%);
+  padding: 4.5rem 0 2.5rem;
+  --mx-x: 50%;
+  --mx-y: 30%;
+}
+.mx-hero::before {
+  /* spotlight that follows the pointer */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(600px circle at var(--mx-x) var(--mx-y), rgba(251, 191, 36, 0.1), transparent 60%);
+  z-index: -1;
+  transition: background 0.2s;
+}
+.mx-hero__grid {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(var(--mx-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mx-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
+  animation: mx-grid-drift 22s linear infinite;
+}
+.mx-hero__glow {
+  position: absolute;
+  z-index: -2;
+  width: 46rem;
+  height: 46rem;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.45;
+  pointer-events: none;
+}
+.mx-hero__glow--yellow {
+  background: radial-gradient(circle, var(--mx-yellow) 0%, transparent 65%);
+  opacity: 0.22;
+  top: -22rem;
+  left: -12rem;
+  animation: mx-float-a 16s var(--mx-ease) infinite alternate;
+}
+.mx-hero__glow--white {
+  background: radial-gradient(circle, #ffffff 0%, transparent 65%);
+  bottom: -30rem;
+  right: -14rem;
+  opacity: 0.08;
+  animation: mx-float-b 19s var(--mx-ease) infinite alternate;
+}
+.mx-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 3rem;
+  align-items: center;
+  padding: 0 1.2rem;
+}
+.mx-hero__copy > * {
+  animation: mx-rise 0.9s var(--mx-ease) both;
+}
+.mx-hero__copy > :nth-child(2) { animation-delay: 0.08s; }
+.mx-hero__copy > :nth-child(3) { animation-delay: 0.16s; }
+.mx-hero__copy > :nth-child(4) { animation-delay: 0.24s; }
+.mx-hero__copy > :nth-child(5) { animation-delay: 0.32s; }
+
+.mx-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-size: 0.72rem;
+  font-weight: 500;
+  transition: border-color 0.3s, background 0.3s;
+}
+.mx-pill:hover {
+  border-color: rgba(251, 191, 36, 0.6);
+  background: rgba(251, 191, 36, 0.08);
+}
+.mx-pill__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--mx-yellow);
+  box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.6);
+  animation: mx-pulse 2.4s infinite;
+}
+.mx-pill__arrow {
+  transition: transform 0.3s var(--mx-ease);
+}
+.mx-pill:hover .mx-pill__arrow {
+  transform: translateX(3px);
+}
+.mx-hero__title {
+  margin: 1.2rem 0 1rem;
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: #fff;
+}
+.mx-gradient-text {
+  background: linear-gradient(90deg, var(--mx-yellow), var(--mx-yellow-soft) 30%, #ffffff 50%,
+      var(--mx-yellow-soft) 70%, var(--mx-yellow));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: mx-shine 6s linear infinite;
+}
+.mx-hero__lead {
+  max-width: 36rem;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+}
+.mx-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.8rem 0 1.2rem;
+}
+.mx-hero__meta {
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.mx-hero__meta a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.mx-hero__meta a:hover {
+  color: #fff;
+}
+
+/* buttons used in the hero */
+.mx-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.3rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  transition: transform 0.25s var(--mx-ease), box-shadow 0.25s, background 0.25s, color 0.25s;
+}
+.mx-btn--primary {
+  color: var(--mx-ink) !important;
+  background: var(--mx-yellow);
+  box-shadow: 0 8px 30px rgba(251, 191, 36, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.mx-btn--primary:hover {
+  transform: translateY(-2px);
+  background: var(--mx-yellow-soft);
+  box-shadow: 0 14px 40px rgba(251, 191, 36, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.mx-btn--primary span {
+  transition: transform 0.25s var(--mx-ease);
+}
+.mx-btn--primary:hover span {
+  transform: translateX(3px);
+}
+.mx-btn--ghost {
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+}
+.mx-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+.mx-btn--link {
+  color: rgba(255, 255, 255, 0.75) !important;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+}
+.mx-btn--link:hover {
+  color: var(--mx-yellow) !important;
+}
+
+/* ---------------------------------------------------------------- terminal */
+.mx-terminal {
+  position: relative;
+  border-radius: var(--mx-radius);
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(251, 191, 36, 0.08),
+    0 0 60px rgba(251, 191, 36, 0.1);
+  overflow: hidden;
+  animation: mx-rise 1s 0.2s var(--mx-ease) both, mx-bob 7s 1.2s ease-in-out infinite;
+}
+.mx-terminal::before {
+  /* animated gradient border */
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--mx-angle, 0deg), transparent 0deg, var(--mx-yellow) 60deg,
+      rgba(255, 255, 255, 0.7) 120deg, transparent 180deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: mx-spin 6s linear infinite;
+  opacity: 0.8;
+  pointer-events: none;
+}
+@property --mx-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.mx-terminal__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+}
+.mx-terminal__bar span {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+.mx-terminal__bar span:nth-child(2) { background: #febc2e; }
+.mx-terminal__bar span:nth-child(3) { background: #28c840; }
+.mx-terminal__bar em {
+  margin-left: auto;
+  margin-right: auto;
+  font-style: normal;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.45);
+  transform: translateX(-1.2rem);
+}
+.md-typeset .mx-terminal__body,
+.mx-terminal__body {
+  margin: 0;
+  height: 21rem;
+  overflow: hidden;
+  padding: 1.1rem 1.2rem;
+  background: transparent;
+  font-family: var(--md-code-font-family);
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.mx-terminal__body code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+.mx-t-prompt { color: var(--mx-yellow); font-weight: 700; }
+.mx-t-cmd { color: #fff; font-weight: 600; }
+.mx-t-ok { color: #4ade80; }
+.mx-t-dim { color: rgba(255, 255, 255, 0.5); }
+.mx-t-ask { color: #93c5fd; }
+.mx-t-answer { color: var(--mx-yellow); font-weight: 700; }
+.mx-t-warn { color: #fb923c; }
+.mx-t-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: var(--mx-yellow);
+  animation: mx-blink 1s steps(1) infinite;
+}
+
+/* ---------------------------------------------------------------- stats */
+.mx-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 3.5rem;
+  padding: 0 1.2rem;
+}
+.mx-stat {
+  padding: 1.1rem 1.2rem;
+  border-radius: var(--mx-radius);
+  border: 1px solid var(--mx-line);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+  animation: mx-rise 0.9s var(--mx-ease) both;
+}
+.mx-stat:nth-child(2) { animation-delay: 0.1s; }
+.mx-stat:nth-child(3) { animation-delay: 0.2s; }
+.mx-stat:nth-child(4) { animation-delay: 0.3s; }
+.mx-stat strong {
+  display: block;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(90deg, #fff, var(--mx-yellow-soft));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.mx-stat span {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ---------------------------------------------------------------- home content */
+.mx-home {
+  padding-top: 0.5rem;
+}
+.mx-home > p:first-child:empty {
+  display: none;
+}
+.md-typeset .mx-section-title {
+  margin: 3.2rem 0 0.4rem;
+  text-align: center;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.md-typeset .mx-section-lead {
+  margin: 0 auto 1.8rem;
+  max-width: 34rem;
+  text-align: center;
+  color: var(--mx-muted);
+}
+.md-typeset .mx-centered {
+  text-align: center;
+  color: var(--mx-muted);
+  max-width: 40rem;
+  margin: 1rem auto 0;
+}
+
+/* steps */
+.mx-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: 1.5rem 0 1rem;
+  position: relative;
+}
+.mx-step {
+  position: relative;
+  padding: 1.4rem 1.3rem 1.2rem;
+  border-radius: var(--mx-radius);
+  border: 1px solid var(--mx-card-border);
+  background: var(--mx-card-bg);
+  box-shadow: var(--mx-card-shadow);
+}
+.md-typeset .mx-step h3 {
+  margin: 0.8rem 0 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.md-typeset .mx-step p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--mx-muted);
+}
+.mx-step__num {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 10px;
+  font-weight: 800;
+  color: var(--mx-ink);
+  background: var(--mx-yellow);
+  box-shadow: 0 6px 18px rgba(251, 191, 36, 0.35);
+}
+.mx-step:nth-child(2) { transition-delay: 0.08s; }
+.mx-step:nth-child(3) { transition-delay: 0.16s; }
+
+/* code example side by side */
+.md-typeset .grid.mx-example {
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  align-items: stretch;
+}
+.md-typeset .grid.mx-example > .highlight {
+  margin: 0;
+}
+/* The examples' tabs: labels centered above the code; the right column stacks the migration
+   and its rollback. */
+.mx-home .tabbed-set .tabbed-labels {
+  justify-content: center;
+}
+.mx-home .tabbed-set .tabbed-labels > label {
+  font-size: 0.75rem;
+}
+.mx-home .tabbed-set .grid.mx-example {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+.mx-home .tabbed-set .grid.mx-example > .highlight:first-child {
+  grid-row: span 2;
+}
+@media screen and (max-width: 44.9375em) {
+  .mx-home .tabbed-set .grid.mx-example {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Long SQL lines wrap instead of scrolling sideways. */
+.mx-home .tabbed-set pre > code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* "From the blog": the newest articles as the blog page's cards, side by side */
+.mx-latest {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 22rem));
+  justify-content: center;
+  gap: 1rem;
+}
+.mx-latest .mx-post-card {
+  margin: 0;
+}
+/* The home page's text styles would give the card's lists bullets and indents. */
+.md-typeset .mx-latest ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.md-typeset .mx-latest ul li {
+  margin: 0;
+}
+.md-typeset .mx-latest .md-post__content h2 {
+  margin-top: 0.6rem;
+}
+
+/* feature cards */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid > .card {
+  position: relative;
+  border-radius: var(--mx-radius);
+  border: 1px solid var(--mx-card-border);
+  background: var(--mx-card-bg);
+  box-shadow: var(--mx-card-shadow);
+  transition: transform 0.35s var(--mx-ease), box-shadow 0.35s, border-color 0.35s;
+}
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid > .card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(251, 191, 36, 0.7);
+  box-shadow: 0 18px 40px rgba(251, 191, 36, 0.14), var(--mx-card-shadow);
+}
+.md-typeset .grid.cards > ul > li > hr {
+  border-color: var(--mx-card-border);
+}
+.md-typeset .mx-features .lg {
+  color: var(--mx-accent-text);
+  transition: transform 0.4s var(--mx-ease);
+}
+.md-typeset .mx-features li:hover .lg {
+  transform: scale(1.15) rotate(-6deg);
+}
+.mx-features li:nth-child(3n + 2) { transition-delay: 0.06s; }
+.mx-features li:nth-child(3n + 3) { transition-delay: 0.12s; }
+
+/* stack chips */
+.mx-stack {
+  max-width: 52rem;
+  margin: 0 auto;
+}
+.mx-stack__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px dashed var(--mx-card-border);
+}
+.mx-stack__label {
+  width: 7.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mx-muted);
+}
+.mx-chip {
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--mx-card-border);
+  background: var(--mx-card-bg);
+  transition: border-color 0.25s, color 0.25s, transform 0.25s var(--mx-ease);
+}
+.mx-chip:hover {
+  border-color: var(--mx-yellow);
+  background: rgba(251, 191, 36, 0.14);
+  transform: translateY(-2px);
+}
+
+/* call to action band */
+.md-typeset .mx-cta {
+  position: relative;
+  overflow: hidden;
+  margin: 4rem 0 1rem;
+  padding: 2.6rem 2rem;
+  border-radius: 20px;
+  text-align: center;
+  color: #fff;
+  background: radial-gradient(100% 140% at 0% 0%, rgba(251, 191, 36, 0.32), transparent 55%),
+    radial-gradient(100% 140% at 100% 100%, rgba(255, 255, 255, 0.07), transparent 55%),
+    var(--mx-ink-2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.md-typeset .mx-cta h2 {
+  margin: 0 0 0.5rem;
+  color: #fff;
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.md-typeset .mx-cta p {
+  color: rgba(255, 255, 255, 0.75);
+}
+.md-typeset .mx-cta .md-button:not(.md-button--primary) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* scroll reveal: elements start hidden only when JavaScript runs (html.mx-js) */
+.mx-js .mx-reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.8s var(--mx-ease), transform 0.8s var(--mx-ease);
+}
+.mx-js .mx-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+/* Headings only slide in: half-faded text looks broken while it scrolls into view. */
+.mx-js .mx-section-title.mx-reveal,
+.mx-js .mx-section-lead.mx-reveal {
+  opacity: 1;
+  transform: translateY(14px);
+  transition: transform 0.6s var(--mx-ease);
+}
+.mx-js .mx-section-title.mx-reveal.is-visible,
+.mx-js .mx-section-lead.mx-reveal.is-visible {
+  transform: none;
+}
+
+/* ---------------------------------------------------------------- all pages */
+.md-typeset h1 {
+  color: var(--md-default-fg-color);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.md-typeset h2 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.md-typeset .md-button {
+  border-radius: 999px;
+  padding: 0.55em 1.4em;
+  font-weight: 600;
+  transition: transform 0.25s var(--mx-ease), box-shadow 0.25s, background-color 0.25s;
+}
+.md-typeset .md-button:hover {
+  transform: translateY(-2px);
+}
+.md-typeset .md-button--primary,
+.md-typeset .md-button--primary:focus {
+  border: none;
+  color: var(--mx-ink);
+  background: var(--mx-yellow);
+  box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
+}
+.md-typeset .md-button--primary:hover {
+  color: var(--mx-ink);
+  background: var(--mx-yellow-soft);
+  box-shadow: 0 12px 32px rgba(251, 191, 36, 0.45);
+}
+.md-typeset pre > code,
+.md-typeset .highlight,
+.md-typeset .highlighttable {
+  border-radius: 12px;
+}
+.md-typeset .highlight {
+  box-shadow: var(--mx-card-shadow);
+}
+.md-typeset .highlight span.filename {
+  border-radius: 12px 12px 0 0;
+  font-family: var(--md-code-font-family);
+  font-size: 0.72rem;
+}
+.md-typeset .highlight span.filename + pre > code {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 12px;
+  border-width: 1px;
+  box-shadow: var(--mx-card-shadow);
+}
+/* Admonitions in the brand: informational ones yellow, warnings deep amber, the icon black on
+   white and yellow on black. Danger, failure and bug keep Material's red: red means danger. */
+.md-typeset :is(.admonition, details):is(.note, .abstract, .summary, .tldr, .info, .todo,
+    .tip, .hint, .important, .success, .check, .done, .question, .help, .faq, .example,
+    .quote, .cite) {
+  border-color: var(--mx-yellow);
+}
+.md-typeset :is(.note, .abstract, .summary, .tldr, .info, .todo, .tip, .hint, .important,
+    .success, .check, .done, .question, .help, .faq, .example, .quote, .cite)
+    > :is(.admonition-title, summary) {
+  background-color: rgba(251, 191, 36, 0.12);
+}
+.md-typeset :is(.admonition, details):is(.warning, .caution, .attention) {
+  border-color: var(--mx-yellow-deep);
+}
+.md-typeset :is(.warning, .caution, .attention) > :is(.admonition-title, summary) {
+  background-color: rgba(245, 158, 11, 0.18);
+}
+.md-typeset :is(.note, .abstract, .summary, .tldr, .info, .todo, .tip, .hint, .important,
+    .success, .check, .done, .question, .help, .faq, .example, .quote, .cite, .warning,
+    .caution, .attention) > :is(.admonition-title, summary)::before {
+  background-color: var(--mx-accent-text);
+}
+.md-typeset :is(.admonition, details):focus-within {
+  box-shadow: var(--mx-card-shadow);
+}
+.md-typeset table:not([class]) {
+  border-radius: 12px;
+  border: 1px solid var(--mx-card-border);
+  box-shadow: var(--mx-card-shadow);
+}
+.md-typeset a:not(.md-button):not(.mx-btn):not(.mx-pill) {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s var(--mx-ease), color 0.2s;
+}
+.md-typeset a:not(.md-button):not(.mx-btn):not(.mx-pill):hover {
+  background-size: 100% 1px;
+}
+/* Light mode: links are black text with a yellow underline that fills like a highlighter. */
+[data-md-color-scheme="default"] .md-typeset a:not(.md-button):not(.mx-btn):not(.mx-pill) {
+  background-image: linear-gradient(var(--mx-yellow), var(--mx-yellow));
+  background-size: 100% 2px;
+  font-weight: 500;
+}
+[data-md-color-scheme="default"] .md-typeset a:not(.md-button):not(.mx-btn):not(.mx-pill):hover {
+  background-size: 100% 100%;
+}
+.md-nav__link--active {
+  font-weight: 600;
+}
+.md-content__inner {
+  animation: mx-fade 0.45s var(--mx-ease) both;
+}
+
+/* footer (overrides/partials/footer.html): black in both color schemes, like the header */
+.md-footer,
+.md-footer-meta {
+  background: var(--mx-ink);
+}
+.mx-footer {
+  border-top: 1px solid var(--mx-line);
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.7rem;
+}
+.mx-footer a {
+  color: rgba(255, 255, 255, 0.78);
+  transition: color 0.2s var(--mx-ease);
+}
+.mx-footer a:hover,
+.mx-footer a:focus-visible {
+  color: var(--mx-yellow);
+}
+.mx-footer__inner {
+  padding: 2.6rem 0.8rem 1.2rem;
+}
+.mx-footer__top {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1.2fr) 3fr;
+  gap: 2.5rem;
+}
+.mx-footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.mx-footer .mx-footer__logo {
+  color: #fff;
+}
+.mx-footer__mark {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+.mx-footer__tagline {
+  max-width: 20rem;
+  margin: 0.8rem 0 1rem;
+  line-height: 1.6;
+}
+.mx-footer__social {
+  display: flex;
+  gap: 0.5rem;
+}
+.mx-footer__social a {
+  display: inline-flex;
+  padding: 0.4rem;
+  border: 1px solid var(--mx-line);
+  border-radius: 0.5rem;
+}
+.mx-footer__social a:hover {
+  border-color: var(--mx-yellow);
+}
+.mx-footer__social svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  fill: currentColor;
+}
+.mx-footer__columns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+.mx-footer__col h2 {
+  margin: 0 0 0.8rem;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.mx-footer__col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mx-footer__col li {
+  margin: 0 0 0.55rem;
+}
+.mx-footer__install {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--mx-line);
+}
+.mx-footer__install-label {
+  margin-right: 0.3rem;
+  color: #fff;
+  font-weight: 600;
+}
+.mx-footer__install a {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--mx-line);
+  border-radius: 999px;
+  font-size: 0.65rem;
+}
+.mx-footer__install a:hover {
+  border-color: var(--mx-yellow);
+}
+.mx-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-top: 1.2rem;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+.mx-footer__bottom a {
+  color: rgba(255, 255, 255, 0.62);
+}
+@media screen and (max-width: 60em) {
+  .mx-footer__top {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+@media screen and (max-width: 36em) {
+  .mx-footer__columns {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1rem;
+  }
+}
+
+/* small helpers kept from the previous design */
+.mx-ok {
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: var(--mx-yellow);
+  color: var(--mx-ink);
+  font-size: 0.85em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.mx-note { opacity: 0.8; font-size: 0.85em; }
+
+/* Diagrams in the guides: inline SVG drawn with the page's own colors, so they follow light and
+   dark mode. Yellow is a fill with black text on it, never text on white. */
+.md-typeset .mx-diagram {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  margin: 1.5em auto 2em;
+}
+.mx-diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--md-text-font-family);
+}
+/* On phones the diagram keeps a readable size and scrolls sideways instead of shrinking. */
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .mx-diagram {
+    overflow-x: auto;
+  }
+  .mx-diagram svg {
+    min-width: 32rem;
+  }
+}
+.mx-diagram text {
+  fill: var(--md-default-fg-color);
+  font-size: 15px;
+  font-weight: 600;
+}
+.mx-diagram .mx-diagram__label {
+  fill: var(--md-default-fg-color--light);
+  font-size: 13px;
+  font-weight: 400;
+}
+.mx-diagram .mx-diagram__small {
+  font-size: 13px;
+  font-weight: 400;
+}
+.mx-diagram .mx-diagram__mono {
+  font-family: var(--md-code-font-family);
+  font-size: 13px;
+  font-weight: 500;
+}
+.mx-diagram .mx-diagram__on-accent {
+  fill: var(--mx-ink);
+  font-weight: 700;
+}
+.mx-diagram__box {
+  fill: var(--md-code-bg-color);
+  stroke: var(--md-default-fg-color--lighter);
+  stroke-width: 1.5;
+}
+.mx-diagram__box--accent {
+  stroke: var(--mx-yellow);
+  stroke-width: 2.5;
+}
+.mx-diagram__accent {
+  fill: var(--mx-yellow);
+}
+.mx-diagram__chip {
+  fill: none;
+  stroke: var(--md-default-fg-color--light);
+  stroke-width: 1.5;
+}
+.mx-diagram__line,
+.mx-diagram__axis {
+  fill: none;
+  stroke: var(--md-default-fg-color--light);
+  stroke-width: 1.8;
+}
+.mx-diagram__axis {
+  stroke-dasharray: 6 5;
+}
+.mx-diagram__head {
+  fill: var(--md-default-fg-color--light);
+}
+
+/* ---------------------------------------------------------------- responsive */
+@media screen and (max-width: 76.1875em) {
+  .mx-hero__inner { grid-template-columns: minmax(0, 1fr); gap: 2.2rem; }
+  .mx-terminal { max-width: 40rem; }
+}
+@media screen and (max-width: 44.9375em) {
+  .mx-hero { padding: 2.5rem 0 1.5rem; }
+  .mx-hero__inner, .mx-stats { padding: 0 0.8rem; }
+  .mx-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 2rem; }
+  .mx-steps { grid-template-columns: 1fr; gap: 0.8rem; }
+  .mx-step {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.9rem;
+    padding: 1rem 1.1rem;
+  }
+  .mx-step__num { grid-row: span 2; }
+  .md-typeset .mx-step h3 { margin: 0.15rem 0 0.25rem; }
+  .mx-terminal__body, .md-typeset .mx-terminal__body { height: 18rem; font-size: 0.64rem; }
+  .mx-stack__label { width: 100%; }
+}
+
+/* ---------------------------------------------------------------- keyframes */
+@keyframes mx-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mx-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes mx-shine {
+  to { background-position: 200% center; }
+}
+@keyframes mx-float-a {
+  to { transform: translate(8rem, 5rem) scale(1.1); }
+}
+@keyframes mx-float-b {
+  to { transform: translate(-7rem, -4rem) scale(1.15); }
+}
+@keyframes mx-grid-drift {
+  to { background-position: 48px 48px, 48px 48px; }
+}
+@keyframes mx-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes mx-spin {
+  to { --mx-angle: 360deg; }
+}
+@keyframes mx-blink {
+  50% { opacity: 0; }
+}
+@keyframes mx-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.55); }
+  70% { box-shadow: 0 0 0 8px rgba(251, 191, 36, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
+}
+
+/* People who asked their system for less motion get a still page. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .mx-js .mx-reveal { opacity: 1; transform: none; }
+}
+
+/* Download page file tables (scripts/fetch-releases.py wraps them in .mx-files) */
+/* File names wrap only at their hyphens, never inside a word. */
+.md-typeset .mx-files code {
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .mx-files th:nth-child(4),
+  .md-typeset .mx-files td:nth-child(4) {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------- 404 page */
+/* the page has no article: hide its empty area, or it shows as a white strip in light mode */
+.md-container:has(.mx-404) .md-main {
+  display: none;
+}
+.mx-404 {
+  padding: 4rem 0 4.5rem;
+  min-height: calc(100vh - 7.5rem);
+  display: flex;
+  align-items: center;
+}
+.mx-404__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+.mx-404__code {
+  margin: 0;
+  font-size: clamp(5.5rem, 16vw, 10rem);
+  line-height: 0.9;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  animation: mx-rise 0.9s var(--mx-ease) both;
+}
+.mx-404__title {
+  margin: 1.4rem 0 0.6rem;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+.mx-404__lead {
+  max-width: 32rem;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.68);
+}
+.mx-404__path {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  margin: 1.2rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+.mx-404__path-value {
+  max-width: 100%;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  background: rgba(251, 191, 36, 0.06);
+  color: var(--mx-yellow-soft);
+  font-size: 0.72rem;
+  overflow-wrap: anywhere;
+}
+.mx-404__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 2rem 0 2.6rem;
+}
+.mx-404__actions label.mx-btn {
+  cursor: pointer;
+}
+.mx-404__actions .mx-btn:focus-visible {
+  outline: 2px solid var(--mx-yellow);
+  outline-offset: 3px;
+}
+.mx-404__links {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+  width: 100%;
+  max-width: 56rem;
+}
+.mx-404__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  text-align: left;
+  border-radius: var(--mx-radius);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  transition: transform 0.25s var(--mx-ease), border-color 0.25s, background 0.25s;
+}
+.mx-404__card strong {
+  color: #fff;
+  font-size: 0.82rem;
+}
+.mx-404__card span {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+.mx-404__card code {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+.mx-404__card:hover,
+.mx-404__card:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(251, 191, 36, 0.45);
+  background: rgba(251, 191, 36, 0.05);
+}
+.mx-404__card:hover strong,
+.mx-404__card:focus-visible strong {
+  color: var(--mx-yellow);
+}
+@media screen and (max-width: 56em) {
+  .mx-404__links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media screen and (max-width: 30em) {
+  .mx-404 {
+    padding: 2.5rem 0 3rem;
+  }
+  .mx-404__links {
+    grid-template-columns: 1fr;
+  }
+  .mx-404__actions .mx-btn {
+    justify-content: center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mx-404__code {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------- blog cards */
+/* Each article on the blog page is a card (overrides/partials/post.html); the whole card opens
+   the article. */
+.mx-post-card {
+  position: relative;
+  margin: 0 0 1rem;
+  padding: 0.85rem 1.1rem 0.7rem;
+  background: var(--mx-card-bg);
+  border: 1px solid var(--mx-card-border);
+  border-radius: var(--mx-radius);
+  box-shadow: var(--mx-card-shadow);
+  transition: transform 0.25s var(--mx-ease), border-color 0.25s var(--mx-ease);
+}
+.mx-post-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--mx-yellow);
+}
+.mx-post-card .md-post__header {
+  align-items: center;
+  gap: 0.6rem;
+}
+.mx-post-card .md-post__authors {
+  min-height: 0;
+}
+/* The theme's frame is smaller and its photos grey; the card shows the photo whole, in color. */
+.mx-post-card .md-author {
+  width: 2.1rem;
+  height: 2.1rem;
+}
+.mx-post-card .md-author img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: none;
+}
+.mx-post-card .md-post__meta {
+  flex: 1;
+  margin: 0;
+  line-height: 1.3;
+}
+.mx-post-card__author {
+  color: var(--md-default-fg-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.mx-post-card .md-meta__list {
+  margin: 0;
+  font-size: 0.65rem;
+}
+.mx-post-card .md-draft {
+  align-self: flex-start;
+}
+.mx-post-card .md-post__content h2 {
+  margin: 0.6rem 0 0.3rem;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+/* The title is plain text in the card: no underline from the site's link style. */
+[data-md-color-scheme] .mx-post-card .md-post__content.md-typeset h2 a.toclink {
+  color: var(--md-default-fg-color);
+  background-image: none;
+  font-weight: inherit;
+}
+/* The card shows the opening paragraph only, cut after three lines. */
+.mx-post-card .md-post__content p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  color: var(--mx-muted);
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+.mx-post-card .md-post__content p ~ p {
+  display: none;
+}
+.mx-post-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  margin-top: 0.65rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--mx-card-border);
+  font-size: 0.65rem;
+}
+.mx-post-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--mx-muted);
+}
+.mx-post-card .md-post__action {
+  margin: 0;
+}
+.mx-post-card .md-post__action a {
+  color: var(--mx-accent-text);
+  font-weight: 700;
+}
+.mx-post-card .md-post__action a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+/* The category link stays clickable above the card-wide link. */
+.mx-post-card .md-meta__link {
+  position: relative;
+  z-index: 1;
+}
+/* Article page: the author and the date, category and reading time below it sit close
+   together. */
+.md-sidebar--post .md-post__profile {
+  margin-bottom: 0.4rem;
+}
+.md-sidebar--post .md-post__meta .md-post__title {
+  margin-top: 0.4rem;
+  margin-bottom: 0.1rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.md-sidebar--post .md-post__meta .md-nav__link {
+  margin-top: 0.3rem;
+  font-size: 0.68rem;
+}
+.md-sidebar--post .md-post__meta .md-nav__link svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mx-post-card,
+  .mx-post-card:hover {
+    transform: none;
+    transition: none;
+  }
+}
