@@ -1,0 +1,11 @@
+1bc8a0514fe1a194e222fed28c3bdfb38423fa4b8eb20f325ff8f1f75c466157  migrax-0.19.0.zip
+f7b3fbec32edb3a1a9e54f17c76d0a56b8973c2d27ad420c464a8bc4cd283582  migrax-0.19.0-sbom.cdx.json
+2e74e13775a5933fbe81023ba4ce5af44c744d92402063df7a7c50f675b4cb3d  migrax-0.19.0.jar
+ddae765710eaa1563a479dd131060bfb82621931e400fab8d0ee3c845a047e13  migrax-gradle-plugin-0.19.0.jar
+fe14cb51eaabb310043ee8d3dc7e635656671eac83834794d8e7be8c8c3d7dc2  migrax-helidon-0.19.0.jar
+047d0d0bb0ce88a110faf269bbb881fd087391c62ccb4d60e778122a0d3e112f  migrax-jakarta-ee-0.19.0.jar
+f0c1370cb46a2e7e0487891c55ebbefe73c680d3d31281376d175c6530c1f361  migrax-junit-0.19.0.jar
+be71e37bc8024a585d4ba734d9164a36addd0b77aaa70f4e2b7d23bdfd248cb9  migrax-micronaut-0.19.0.jar
+e1e8f0a0399eb0d2ebc8714f59a7dbcd456f344aeabddb6188a97b7617872415  migrax-quarkus-0.19.0.jar
+e0bd01a5c49f24480e4301bf8cb7197a034105efae4d4ea46cf55784f174bb8d  migrax-quarkus-deployment-0.19.0.jar
+ca581bc1112dcc5ab3fd2cd7e4437f046a8c953ddecf38704e89eccafef8f970  migrax-spring-boot-starter-0.19.0.jar
